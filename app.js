@@ -75,30 +75,44 @@ app.get('/get-name', (req, res) => {
 })
 
 app.get('/top-fossils', (req, res) => {
-  let fossils = Object.values(MOST_LIKED_FOSSILS)
-  let name = req.session.name
-  let dropdown = MOST_LIKED_FOSSILS
+  const fossils = Object.values(MOST_LIKED_FOSSILS);
+  const name = req.session.name;
 
   if (!name) {
-    res.redirect('/')
+    res.redirect('/');
   } else {
     res.render('top-fossils.html.njk', {
-      fossils: fossils,
-      name: name,
-      dropdown: dropdown
-    })}
+      fossils,
+      name,
+      dropdown: Object.entries(MOST_LIKED_FOSSILS), 
+    });
+  }
+});
 
- console.log(dropdown)
-})
+app.get('/thank-you', (req, res) => {
+  res.render('thank-you.html.njk');
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy((error) => {
+    if (error) {
+      console.error('Error logging out:', error);
+    }
+    res.redirect('/');
+  });
+});
+
 
 app.post('/like-fossil', (req, res) => {
-  if (req.body.value === 'aust') {
-    MOST_LIKED_FOSSILS.aust.num_likes + 1
-  } 
+  const selectedFossil = req.body.fossil;
 
-  console.log(req.body.value)
-  res.render('thank-you.html.njk')
-})
+  if (selectedFossil && MOST_LIKED_FOSSILS[selectedFossil]) {
+    MOST_LIKED_FOSSILS[selectedFossil].num_likes += 1;
+  }
+
+  res.redirect('/thank-you');
+});
+
 
 
 app.get('/random-fossil.json', (req, res) => {

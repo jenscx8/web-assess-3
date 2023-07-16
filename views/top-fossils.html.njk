@@ -18,16 +18,14 @@
     {% endfor %}
     <div>
       <form action="/like-fossil" method="POST">
-        <label for="likes">Choose a favorite:</label>
-        <select id="likes" name="likes">
-        <option value="aust">{{dropdown.aust.name}}</option>
-        <option value="quetz">{{dropdown.quetz.name}}</option>
-        <option value="steg">{{dropdown.steg.name}}</option>
-        <option value="trex">{{dropdown.trex.name}}</option>
-       
-        </select>
-        <button type="submit">submit</button>
-      </form>
+    <select name="fossil">
+      <option value="" selected disabled>Select a fossil</option>
+      {% for key, fossil in dropdown %}
+        <option value="{{ key }}">{{ fossil.name }} ({{ fossil.num_likes }} likes)</option>
+      {% endfor %}
+    </select>
+    <button type="submit">Like</button>
+  </form>
     </div>
     {% endblock body %}
   </body>
